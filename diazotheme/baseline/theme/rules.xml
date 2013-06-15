@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:css="http://namespaces.plone.org/diazo/css"
+       xmlns:xhtml="http://www.w3.org/1999/xhtml"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"    
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <notheme if="not(/html/body/div[@id='visual-portal-wrapper'])"/>
+  <theme href="/++theme++baseline-example/index.html"/> 
+
+  <!-- Head rules
+       ================================================================== -->
+  <xi:include href="/++framework++plone/rules/head/base.xml"/>
+  <xi:include href="/++framework++baseline/rules/head/base.xml"/>
+
+  <after theme="/html/head/title">
+      <link href="/++theme++baseline-example/style.css" 
+            type="text/css" rel="stylesheet" media="screen"/>
+  </after>
+
+  <replace content="//*[@class='field']">
+      <div class="width2">
+          <xsl:apply-templates select="./*"/>
+      </div>
+  </replace>
+  <replace content="//*[@id='portal-searchbox']">
+      <div class="column width2">
+          <form>
+              <xsl:copy-of select=".//form/@*"/>
+              <div class="width2">
+                  <xsl:apply-templates select=".//form//label[@for='searchGadget']"/>
+              </div>
+              <div class="column first width1">
+                  <xsl:apply-templates select=".//form//*[@id='searchGadget']"/>
+              </div>
+              <div class="column width1">
+                  <xsl:apply-templates select=".//form//*[@class='searchButton']"/>
+              </div>
+          </form>
+      </div>
+  </replace>
+  <replace css:content="#portal-footer">
+      <p id="portal-footer"><small><xsl:apply-templates select="./p/*|./p/text()"/></small></p>
+  </replace>
+  <replace css:content="#portal-colophon">
+      <p id="portal-colophon"><small><xsl:apply-templates select=".//a"/></small></p>
+  </replace>
+  <replace css:content="#portal-siteactions">
+      <p id="portal-siteactions"><small><xsl:apply-templates select=".//a"/></small></p>
+  </replace>
+
+
+  <!-- Body rules
+       ================================================================== -->
+  <xi:include href="/++framework++baseline/rules/body/columns.xml"/>
+  <xi:include href="/++framework++plone/rules/logo/white-56.xml"/>
+
+  <!-- Place the content 
+       .................................................................. -->
+  
+  <copy css:theme="#branding > figure" css:content="#portal-logo"/>
+  <replace css:theme="#branding > h2" css:content="#portal-searchbox"/>
+  <copy css:theme="#main-menu > ul" css:content="#portal-globalnav > li"/>
+  <replace css:theme="#main-content > header > h1" css:content=".documentFirstHeading"/>
+  <copy css:theme="#main-content > header > h1 + p" css:content-children=".documentDescription"/>
+  <drop css:theme="#main-content > section"/>
+  <after css:theme-children="#main-content" css:content="#portal-columns"/>
+  <replace theme="/html/body/div/footer/p" css:content="#portal-footer-wrapper > div > *"/>
+  
+</rules>
